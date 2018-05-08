@@ -1,7 +1,7 @@
 <!-- 左右切换的tab小组件 -->
 <template>
     <ul class="switches">
-        <li class="switch-item" :class="{active : currentIndex === index}" v-for="(item, index) in switches" :key="index">
+        <li @click="switchItem(index)" class="switch-item" :class="{active : currentIndex === index}" v-for="(item, index) in switches" :key="index">
             <span>{{item.name}}</span>
         </li>
     </ul>
@@ -10,7 +10,7 @@
 <script type='text/ecmascript-6'>
 export default {
   props: {
-    siwtches: {
+    switches: {
       type: Array,
       default: function() {
         return []
@@ -31,7 +31,11 @@ export default {
 
   mounted() {},
 
-  methods: {}
+  methods: {
+    switchItem(index) {
+      this.$emit('switch', index)
+    }
+  }
 }
 </script>
 <style scoped lang='less' rel='stylesheet/less'>

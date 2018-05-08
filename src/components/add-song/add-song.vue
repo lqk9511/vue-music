@@ -12,7 +12,7 @@
         <search-box placeholder="搜索歌曲" @query="onQueryChange"></search-box>
       </div>
       <div class="shortcut" v-show="!query">
-        <switches ></switches>
+        <switches @switch="switchItem" :switches="switches" :currentIndex="currentIndex"></switches>
       </div>
       <div class="search-result" v-show="query">
         <suggest @listScroll="blurInput" :query="query" :showSinger="showSinger" @select="selectSuggest"></suggest>
@@ -32,7 +32,16 @@ export default {
   data() {
     return {
       showFlag: false,
-      showSinger: false
+      showSinger: false,
+      currentIndex: 0,
+      switches: [
+        {
+          name: '最近播放'
+        },
+        {
+          name: '搜索历史'
+        }
+      ]
     }
   },
 
@@ -43,6 +52,9 @@ export default {
   mounted() {},
 
   methods: {
+    switchItem(index) {
+      this.currentIndex = index
+    },
     selectSuggest() {
       this.saveSearch()
     },
