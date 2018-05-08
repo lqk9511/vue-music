@@ -79,12 +79,12 @@
             <i @click.stop="togglePlaying" class="icon-mini" :class="miniIcon"></i>
           </progresscircle>
         </div>
-        <div class="control">
+        <div class="control" @click.stop="showPlaylist">
           <i class="icon-playlist"></i>
         </div>
       </div>
     </transition>
-    <playlist></playlist>
+    <playlist ref="playlist"></playlist>
     <audio ref="audio" :src="currentSongUrl ? currentSongUrl : null" @canplay="ready" @error="error" @timeupdate="updateTime" @ended="end"></audio>
   </div>
 </template>
@@ -99,11 +99,12 @@ import Playlist from 'components/playlist/playlist'
 import { mapGetters, mapMutations } from 'vuex'
 import { prefixStyle } from 'common/js/dom'
 import { playMode } from 'common/js/config'
-import { shuffle } from 'common/js/util'
+import { playerMixin } from 'common/js/mixin'
 
 const transform = prefixStyle('transform')
 const transitionDuration = prefixStyle('transitionDuration')
 export default {
+  mixins: [playerMixin],
   props: {},
   data() {
     return {
@@ -136,20 +137,7 @@ export default {
     percent() {
       return this.currentTime / this.currentSong.duration
     },
-    iconMode() {
-      return this.mode === playMode.sequence
-        ? 'icon-sequence'
-        : this.mode === playMode.loop ? 'icon-loop' : 'icon-random'
-    },
-    ...mapGetters([
-      'fullScreen',
-      'playlist',
-      'currentSong',
-      'playing',
-      'currentIndex',
-      'mode',
-      'sequenceList'
-    ])
+    ...mapGetters(['fullScreen', 'playing'])
   },
 
   mounted() {},
@@ -159,6 +147,9 @@ export default {
   },
 
   methods: {
+    showPlaylist() {
+      this.$refs.playlist.show()
+    },
     back() {
       this.setFullScreen(false)
     },
@@ -246,25 +237,6 @@ export default {
       const minute = (interval / 60) | 0
       const second = this._pad(interval % 60)
       return `${minute}:${second}`
-    },
-    changeMode() {
-      const mode = (this.mode + 1) % 3
-      this.setPlayMode(mode)
-      let list = null
-      if (this.mode === playMode.random) {
-        list = shuffle(this.sequenceList)
-      } else {
-        list = this.sequenceList
-      }
-      this.resetCurrentIndex(list)
-      this.setPlayList(list)
-    },
-    resetCurrentIndex(list) {
-      // findIndex es6语法 接受一个函数可以拿到每个数组的元素
-      let index = list.findIndex(item => {
-        return item.id === this.currentSong.id
-      })
-      this.setCurrentIndex(index)
     },
     getLyric() {
       this.currentSong
@@ -428,15 +400,14 @@ export default {
       }
     },
     ...mapMutations({
-      setFullScreen: 'SET_FULL_SCREEN',
-      setPlayingState: 'SET_PLAYING_STATE',
-      setCurrentIndex: 'SET_CURRENT_INDEX',
-      setPlayMode: 'SET_PLAY_MODE',
-      setPlayList: 'SET_PLAYLIST'
+      setFullScreen: 'SET_FULL_SCREEN'
     })
   },
   watch: {
     currentSong(newSong, oldSong) {
+      if (!newSong.id) {
+        return
+      }
       if (newSong.id === oldSong.id) {
         return
       }

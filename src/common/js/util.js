@@ -1,5 +1,5 @@
 export function shuffle(arr) {
-  let _arr = arr
+  let _arr = arr.slice()
   for (let index = 0; index < _arr.length; index++) {
     let j = getRandomInt(0, index)
     let t = _arr[index]
