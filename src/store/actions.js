@@ -8,7 +8,8 @@ import {
 import {
   saveSearch,
   deleteSearch,
-  clearSearch
+  clearSearch,
+  savePlay
 } from 'common/js/cache'
 
 export const selectPlay = function ({
@@ -23,7 +24,6 @@ export const selectPlay = function ({
     let randomList = shuffle(list)
     commit(types.SET_PLAYLIST, randomList)
     index = findIndex(randomList, list[index])
-    debugger
   } else {
     commit(types.SET_PLAYLIST, list)
   }
@@ -149,4 +149,11 @@ export const deleteSongList = function ({
   commit(types.SET_CURRENT_INDEX, -1)
 
   commit(types.SET_PLAYING_STATE, false)
+}
+
+// 保存最近播放的歌曲列表历史
+export const savePlayHistory = function ({
+  commit
+}, song) {
+  commit(types.SET_PLAY_HISTORY, savePlay(song))
 }

@@ -12,7 +12,7 @@
             </span>
           </h1>
         </div>
-        <scroll ref="listContent" :data="sequenceList" class="list-content">
+        <scroll :refreshDelay="refreshDelay" ref="listContent" :data="sequenceList" class="list-content">
           <transition-group name="list" tag="ul">
             <li ref="listItem" class="item" v-for="(item, index) in sequenceList" :key="item.id" @click="selectItem(item,index)">
               <i class="current" :class="getCurrentIcon(item)"></i>
@@ -54,7 +54,8 @@ export default {
   props: {},
   data() {
     return {
-      showFlag: false
+      showFlag: false,
+      refreshDelay: 350
     }
   },
 
@@ -201,7 +202,6 @@ export default {
         overflow: hidden;
         &.list-enter-active,
         &.list-leave-active {
-          transition: all 0.1s;
           transition: all 0.3s;
         }
         &.list-enter,

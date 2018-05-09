@@ -96,7 +96,7 @@ import scroll from 'base/scroll/scroll'
 import progressbar from 'base/progress-bar/progress-bar'
 import progresscircle from 'base/progress-circle/progress-circle'
 import Playlist from 'components/playlist/playlist'
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapMutations, mapActions } from 'vuex'
 import { prefixStyle } from 'common/js/dom'
 import { playMode } from 'common/js/config'
 import { playerMixin } from 'common/js/mixin'
@@ -137,7 +137,7 @@ export default {
     percent() {
       return this.currentTime / this.currentSong.duration
     },
-    ...mapGetters(['fullScreen', 'playing'])
+    ...mapGetters(['fullScreen', 'playing', 'currentIndex'])
   },
 
   mounted() {},
@@ -214,6 +214,7 @@ export default {
     },
     ready() {
       this.songReady = true
+      this.savePlayHistory(this.currentSong)
     },
     error() {
       this.songReady = true
@@ -401,7 +402,8 @@ export default {
     },
     ...mapMutations({
       setFullScreen: 'SET_FULL_SCREEN'
-    })
+    }),
+    ...mapActions(['savePlayHistory'])
   },
   watch: {
     currentSong(newSong, oldSong) {

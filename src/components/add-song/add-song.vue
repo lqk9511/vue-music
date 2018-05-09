@@ -9,14 +9,32 @@
         </div>
       </div>
       <div class="search-box-wrapper">
-        <search-box placeholder="搜索歌曲" @query="onQueryChange"></search-box>
+        <search-box ref="searchBox" placeholder="搜索歌曲" @query="onQueryChange"></search-box>
       </div>
       <div class="shortcut" v-show="!query">
         <switches @switch="switchItem" :switches="switches" :currentIndex="currentIndex"></switches>
+        <div class="list-wrapper">
+          <scroll  ref="songList" class="list-scroll" v-if="currentIndex === 0" :data="playHistory">
+            <div class="list-inner">
+              <song-list :songs="playHistory" @select="selectSong"></song-list>
+            </div>
+          </scroll>
+          <scroll :refreshDelay="refreshDelay" ref="searchList" class="list-scroll" v-if="currentIndex === 1" :data="searchHistory">
+            <div class="list-inner">
+              <search-list @delete="deleteOne" @select="addQuery" :searches="searchHistory"></search-list>
+            </div>
+          </scroll>
+        </div>
       </div>
       <div class="search-result" v-show="query">
         <suggest @listScroll="blurInput" :query="query" :showSinger="showSinger" @select="selectSuggest"></suggest>
       </div>
+      <top-tip ref="topTip">
+        <div class="tip-title">
+          <i class="icon-ok"></i>
+          <span class="text">1首歌曲已经添加到播放队列</span>
+        </div>
+      </top-tip>
     </div>
   </transition>
 </template>
@@ -25,7 +43,13 @@
 import SearchBox from 'base/search-box/search-box'
 import Suggest from 'components/suggest/suggest'
 import Switches from 'base/switches/switches'
+import Scroll from 'base/scroll/scroll'
+import SongList from 'base/song-list/song-list'
+import Song from 'common/js/song'
+import SearchList from 'base/search-list/search-list'
+import TopTip from 'base/top-tip/top-tip'
 import { searchMixin } from 'common/js/mixin'
+import { mapGetters, mapActions } from 'vuex'
 export default {
   mixins: [searchMixin],
   props: {},
@@ -45,25 +69,48 @@ export default {
     }
   },
 
-  components: { SearchBox, Suggest, Switches },
+  components: { SearchBox, Suggest, Switches, Scroll, SongList, SearchList, TopTip },
 
-  computed: {},
+  computed: {
+    ...mapGetters(['playHistory'])
+  },
 
   mounted() {},
 
   methods: {
+    showTip() {
+      this.$refs.topTip.show()
+    },
+    deleteOne(item) {
+      this.deleteSearcHistory(item)
+    },
+    selectSong(song, index) {
+      if (index !== 0) {
+        this.insertSong(new Song(song))
+        this.showTip()
+      }
+    },
     switchItem(index) {
       this.currentIndex = index
     },
     selectSuggest() {
       this.saveSearch()
+      this.showTip()
     },
     show() {
       this.showFlag = true
+      setTimeout(() => {
+        if (this.currentIndex === 0) {
+          this.$refs.songList.refresh()
+        } else {
+          this.$refs.SearchList.refresh()
+        }
+      }, 20)
     },
     hide() {
       this.showFlag = false
-    }
+    },
+    ...mapActions(['insertSong'])
   }
 }
 </script>

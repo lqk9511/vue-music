@@ -3,6 +3,15 @@ import storage from 'good-storage'
 const SEARCH_KEY = '__search__'
 const SEARCH_MAX_LENGTH = 15
 
+const PLAY_KEY = '__play__'
+const PLAY_MAX_LENGTH = 200
+
+/**
+ * @param {Array} arr 要插入元素的数组
+ * @param {any} val 要插入的值
+ * @param {Function} compare 比较函数
+ * @param {Number} maxLen 数组的最大值
+ */
 function insertArray(arr, val, compare, maxLen) {
   const index = arr.findIndex(compare)
   if (index === 0) {
@@ -48,4 +57,20 @@ export function deleteSearch(query) {
 export function clearSearch() {
   storage.remove(SEARCH_KEY)
   return []
+}
+
+// 保存最近播放历史的localStorage
+export function savePlay(song) {
+  // 获得当前的PLAY_KEY的本地缓存，如果没有的话就默认给一个空数组
+  let songs = storage.get(PLAY_KEY, [])
+  insertArray(songs, song, (item) => {
+    return item.id === song.id
+  }, PLAY_MAX_LENGTH)
+  storage.set(PLAY_KEY, songs)
+  return songs
+}
+
+// 获得最近播放的历史
+export function loadPlay() {
+  return storage.get(PLAY_KEY, [])
 }
