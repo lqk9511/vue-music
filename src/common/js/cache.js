@@ -6,6 +6,9 @@ const SEARCH_MAX_LENGTH = 15
 const PLAY_KEY = '__play__'
 const PLAY_MAX_LENGTH = 200
 
+// 定义收藏的key
+const FAVORITE_KEY = '__favorite__'
+const FAVORITE_MAX_LENGTH = 200
 /**
  * @param {Array} arr 要插入元素的数组
  * @param {any} val 要插入的值
@@ -25,7 +28,10 @@ function insertArray(arr, val, compare, maxLen) {
     arr.pop()
   }
 }
-
+/**
+ * @param {Array} arr 要在哪个数组中删除
+ * @param {Function} compare 比较函数
+ */
 function deleteFromArray(arr, compare) {
   const index = arr.findIndex(compare)
   if (index > -1) {
@@ -73,4 +79,27 @@ export function savePlay(song) {
 // 获得最近播放的历史
 export function loadPlay() {
   return storage.get(PLAY_KEY, [])
+}
+
+// 保存收藏的歌曲
+export function saveFavorite(song) {
+  let songs = storage.get(FAVORITE_KEY, [])
+  insertArray(songs, song, (item) => {
+    return item.id === song.id
+  }, FAVORITE_MAX_LENGTH)
+  storage.set(FAVORITE_KEY, songs)
+  return songs
+}
+// 删除收藏的歌曲
+export function deleteFavorite(song) {
+  let songs = storage.get(FAVORITE_KEY, [])
+  deleteFromArray(songs, (item) => {
+    return item.id === song.id
+  })
+  storage.set(FAVORITE_KEY, songs)
+  return songs
+}
+// 每次获取收藏的歌曲
+export function loadFavorite() {
+  return storage.get(FAVORITE_KEY, [])
 }

@@ -9,7 +9,9 @@ import {
   saveSearch,
   deleteSearch,
   clearSearch,
-  savePlay
+  savePlay,
+  saveFavorite,
+  deleteFavorite
 } from 'common/js/cache'
 
 export const selectPlay = function ({
@@ -31,6 +33,7 @@ export const selectPlay = function ({
   commit(types.SET_FULL_SCREEN, true)
   commit(types.SET_PLAYING_STATE, true)
 }
+// 随机播放事件
 export const randomPlay = function ({
   commit
 }, {
@@ -156,4 +159,18 @@ export const savePlayHistory = function ({
   commit
 }, song) {
   commit(types.SET_PLAY_HISTORY, savePlay(song))
+}
+
+// 点收藏的时候收藏歌曲
+export const saveFavoriteList = function ({
+  commit
+}, song) {
+  commit(types.SET_FAVORITE_LIST, saveFavorite(song))
+}
+
+// 删除收藏的歌曲
+export const deleteFavoriteList = function ({
+  commit
+}, song) {
+  commit(types.SET_FAVORITE_LIST, deleteFavorite(song))
 }

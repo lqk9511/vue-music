@@ -4,7 +4,8 @@ import {
 
 import {
   loadSearch,
-  loadPlay
+  loadPlay,
+  loadFavorite
 } from 'common/js/cache'
 
 const state = {
@@ -18,6 +19,7 @@ const state = {
   disc: {},
   topList: {},
   searchHistory: loadSearch(),
-  playHistory: loadPlay()
+  playHistory: loadPlay(),
+  favoriteList: loadFavorite()
 }
 export default state
