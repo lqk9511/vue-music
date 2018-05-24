@@ -43,14 +43,13 @@ export default {
       }
       getSongList(this.disc.dissid).then(res => {
         if (res.code === ERR_OK) {
-          console.log(res)
           this.songs = this._normalizeSongs(res.cdlist[0].songlist)
         }
       })
     },
     _normalizeSongs(list) {
       let ret = []
-      list.array.forEach(musicData => {
+      list.forEach(musicData => {
         if (musicData.songid && musicData.albumid) {
           ret.push(createSong(musicData))
         }
@@ -65,8 +64,8 @@ export default {
 .silde-leave-active {
   transition: all 0.3s;
 }
-.slide-enter,
-.slide-leave-to {
+.silde-enter,
+.silde-leave-to {
   transform: translate3d(100%, 0, 0);
 }
 </style>

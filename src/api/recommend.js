@@ -47,7 +47,7 @@ export function getSongList(disstid) {
     hostUin: 0,
     platform: 'yqq',
     needNewCode: 0,
-    format: 'json'
+    format: 'jsonp'
   })
 
   return axios.get(url, {

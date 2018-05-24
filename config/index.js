@@ -37,14 +37,18 @@ module.exports = {
         }
       },
       '/api/getSongList': {
-        target: 'https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg',
+        // target: 'https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg',
+        target:'http://ustbhuangyi.com/music/api/getCdInfo', 
+        // bypass: function (req, res, proxyOptions) {
+        //   req.headers.referer = 'https://c.y.qq.com';
+        //   req.headers.host = 'c.y.qq.com'
+        // },
         bypass: function (req, res, proxyOptions) {
-          req.headers.referer = 'https://c.y.qq.com';
-          req.headers.host = 'c.y.qq.com'
+          req.headers.referer = 'http://ustbhuangyi.com/music/';
+          req.headers.host = 'ustbhuangyi.com'
         },
-        headers: 'https://c.y.qq.com',
         // 如果是https接口，需要配置这个参数
-        secure: false,
+        // secure: false,
         // 如果接口跨域，需要进行这个参数配置
         changeOrigin: true,
         pathRewrite: {
@@ -106,7 +110,7 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsPublicPath: './',
     proxyTable: {
       '/api/getDiscList': {
         // target 代表源地址
@@ -134,14 +138,18 @@ module.exports = {
         }
       },
       '/api/getSongList': {
-        target: 'https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg',
+        // target: 'https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg',
+        target:'http://ustbhuangyi.com/music/api/getCdInfo', 
+        // bypass: function (req, res, proxyOptions) {
+        //   req.headers.referer = 'https://c.y.qq.com';
+        //   req.headers.host = 'c.y.qq.com'
+        // },
         bypass: function (req, res, proxyOptions) {
-          req.headers.referer = 'https://c.y.qq.com';
-          req.headers.host = 'c.y.qq.com'
+          req.headers.referer = 'http://ustbhuangyi.com/music/';
+          req.headers.host = 'ustbhuangyi.com'
         },
-        headers: 'https://c.y.qq.com',
         // 如果是https接口，需要配置这个参数
-        secure: false,
+        // secure: false,
         // 如果接口跨域，需要进行这个参数配置
         changeOrigin: true,
         pathRewrite: {
@@ -169,7 +177,7 @@ module.exports = {
      * Source Maps
      */
 
-    productionSourceMap: true,
+    productionSourceMap: false,
     // https://webpack.js.org/configuration/devtool/#production
     devtool: '#source-map',
 
